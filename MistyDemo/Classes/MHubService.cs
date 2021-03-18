@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,8 +50,22 @@ namespace MistyDemo.Classes
             while (true)
             {
                 MReading toSend = _queue.GetQueued();
+
                 if (toSend != null)
                 {
+                    string toSendString = JsonConvert.SerializeObject(toSend);
+
+                    using var message = new Message(Encoding.ASCII.GetBytes(toSendString))
+                    {
+                        ContentType = "application/json",
+                        ContentEncoding = "utf-8",
+                    };
+
+                    // An IoT hub can filter on these properties without access to the message body.
+                    //message.Properties.Add("temperatureAlert", (currentTemperature > 30) ? "true" : "false");
+
+                    await _client.SendEventAsync(message);
+
                     Console.WriteLine("Sent: " + JsonConvert.SerializeObject(toSend));
                 }
             }
