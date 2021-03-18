@@ -15,23 +15,25 @@ namespace MistyDemo.Classes
     {
 
         private Thread _readThread { get; set; }
-
-        private ISensor _sensor;
-        private MQueue _queue;
-        private MDevice _device;
+        private MQueue _queue { get; set; }
+        private MDevice _device { get; set; }
 
         public MSensorService(IWebHostEnvironment env, MQueue queue, MDevice device)
         {
+
+            _queue = queue;
+            _device = device;
+
+            _device.Interval = 5;
+
             if (env.IsDevelopment())
             {
-                _sensor = new MSensorDev();
+                _device.Sensor = new MSensorDev();
             }
             else
             {
-                _sensor = new MSensor();
+                _device.Sensor = new MSensor();
             }
-            _queue = queue;
-            _device = device;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -57,7 +59,7 @@ namespace MistyDemo.Classes
             while (true)
             {
                 await Task.Delay(_device.Interval * 1000);              
-                MReading reading = _sensor.GetReading();
+                MReading reading = _device.Sensor.GetReading();
                 Console.WriteLine(JsonConvert.SerializeObject(reading));
                 _queue.Queue(reading);
             }

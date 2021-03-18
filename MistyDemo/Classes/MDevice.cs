@@ -8,10 +8,11 @@ namespace MistyDemo.Classes
     public class MDevice
     {
         public int Interval { get; set; }
+        public ISensor Sensor { get; set; }
 
-        public MDevice()
+    public MDevice()
         {
-            Interval = 5;
+            
         }
     }
 }
