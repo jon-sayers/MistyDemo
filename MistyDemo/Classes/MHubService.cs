@@ -61,8 +61,7 @@ namespace MistyDemo.Classes
                         ContentEncoding = "utf-8",
                     };
 
-                    // An IoT hub can filter on these properties without access to the message body.
-                    //message.Properties.Add("temperatureAlert", (currentTemperature > 30) ? "true" : "false");
+                    message.Properties.Add("rulename", (1 > 2) ? "true" : "false");
 
                     await _client.SendEventAsync(message);
 
