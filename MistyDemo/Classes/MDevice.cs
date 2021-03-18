@@ -11,7 +11,7 @@ namespace MistyDemo.Classes
 
         public MDevice()
         {
-            Interval = 20;
+            Interval = 5;
         }
     }
 }
