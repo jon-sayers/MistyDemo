@@ -7,12 +7,17 @@ using System.Text;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Azure.Devices;
+using System;
 
 namespace MistyFunction
 {
     public static class Function1
     {
         private static HttpClient client = new HttpClient();
+
+        private static ServiceClient s_serviceClient;
+
 
         [FunctionName("Function1")]
         public static void Run([IoTHubTrigger("messages/events", Connection = "Wez")]EventData message, ILogger log)
@@ -23,10 +28,18 @@ namespace MistyFunction
 
             log.LogInformation($"C# IoT Hub trigger function processed a message: {readingString}");
 
-            
-
+            //s_serviceClient = ServiceClient.CreateFromConnectionString("HostName=wezmondo.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=GqNdJYcXbTJ/kyp73kRUhIN/Zjx5BTS8yqsh3Trbka4=");
         }
 
+        //public SendAlert()
+        //{
+
+        //    var method = new CloudToDeviceMethod("RemoteCommand", 30, 0);
+
+        //    method.SetPayloadJson("{}");
+
+        //    var response = await serviceClient.InvokeDeviceMethodAsync(deviceId, method);
+        //}
 
     }
 }
