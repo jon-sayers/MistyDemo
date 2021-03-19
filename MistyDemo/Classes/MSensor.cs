@@ -41,6 +41,8 @@ namespace MistyDemo.Classes
             output.Payload.Add(new KeyValuePair<String, String>("p2", "250"));
             output.Payload.Add(new KeyValuePair<String, String>("p3", "400"));
 
+            output.Time = DateTime.UtcNow;
+
             RecentReadings.Add(output);
 
             if (RecentReadings.Count > 10)

@@ -18,6 +18,7 @@ namespace MistyDemo.Classes
 
         public string Id { get; set; }
         public int TypeId { get; set; }
+        public DateTime Time { get; set; }
         public List<KeyValuePair<string, string>> Payload { get; set; }
         public string Hash { get; set; }
 
