@@ -21,6 +21,7 @@ namespace MistyDemo.Classes
         public DateTime Time { get; set; }
         public List<KeyValuePair<string, string>> Payload { get; set; }
         public string Hash { get; set; }
+        public int Alerts { get; set; }
 
         public void CreateHash()
         {

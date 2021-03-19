@@ -12,12 +12,12 @@ namespace MistyDemo.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        public MDevice Device {get; set;}
 
-
-
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(ILogger<IndexModel> logger, MDevice device)
         {
             _logger = logger;
+            Device = device;
         }
 
         public void OnGet()

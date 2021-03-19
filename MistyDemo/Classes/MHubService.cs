@@ -19,7 +19,7 @@ namespace MistyDemo.Classes
 
         private Thread _sendThread { get; set; }
         private MQueue _queue { get; set; }
-        private MDevice _device { get; set; }
+        private static MDevice _device { get; set; }
 
         public MHubService(MQueue queue, MDevice device)
         {
@@ -68,13 +68,17 @@ namespace MistyDemo.Classes
                 {
                     string toSendString = JsonConvert.SerializeObject(toSend);
 
+                    int alertCount = _device.CheckReading(toSend);
+
+                    toSend.Alerts = alertCount;
+
                     using var message = new Message(Encoding.ASCII.GetBytes(toSendString))
                     {
                         ContentType = "application/json",
                         ContentEncoding = "utf-8",
                     };
 
-                    message.Properties.Add("alerts", _device.CheckReading(toSend).ToString());
+                    message.Properties.Add("alerts", alertCount.ToString());
 
                     await _client.SendEventAsync(message);
 
@@ -82,6 +86,7 @@ namespace MistyDemo.Classes
                 }
             }
         }
+
 
         private static Task<MethodResponse> AlertFunction(MethodRequest methodRequest, object userContext)
         {
@@ -94,6 +99,10 @@ namespace MistyDemo.Classes
                 Console.WriteLine($"Alert: {data}");
                 Console.ResetColor();
 
+                dynamic dataObject = JsonConvert.DeserializeObject(data);
+
+                _device.Exposure = dataObject.exposure;
+                
                 // Acknowlege the direct method call with a 200 success message
                 string result = $"{{\"result\":\"Executed direct method: {methodRequest.Name}\"}}";
                 return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
@@ -110,11 +119,13 @@ namespace MistyDemo.Classes
         {
             string newIntervalString = desiredProperties["interval"];
             int newInterval = int.Parse(newIntervalString);
-
             _device.Interval = newInterval;
 
+            string alertString = desiredProperties["alerts"].ToString();
+            _device.Alerts = JsonConvert.DeserializeObject<List<MAlert>>(alertString);
+
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Sensor Interval Changed to {newIntervalString} seconds");
+            Console.WriteLine($"Properties Updated from Twin");
             Console.ResetColor();
 
             TwinCollection reportedProperties = new TwinCollection();

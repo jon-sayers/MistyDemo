@@ -2,21 +2,9 @@
 @model IndexModel
 
 @using Newtonsoft.Json
-@using System.Text.RegularExpressions
-
-@{
-    ViewData["Title"] = "Home page";
-    string s = "hello [x] its [y]";
-    Regex rx = new Regex(@"\[.+?\]");
-    var collection = rx.Matches(s).ToList();
-
-}
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @foreach(Match x in collection)
-            {
-        <div>@x.ToString()</div>
-            }
+   
+    @JsonConvert.SerializeObject(Model.Device)
+    
 </div>

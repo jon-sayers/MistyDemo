@@ -11,6 +11,8 @@ namespace MistyDemo.Classes
         public int Interval { get; set; }
         public ISensor Sensor { get; set; }
         public List<MAlert> Alerts { get; set; }
+        public bool Alerted { get; set; }
+        public bool Exposure { get; set; }
 
         public MDevice()
         {
@@ -60,7 +62,14 @@ namespace MistyDemo.Classes
 
             }
 
-            return Alerts.Where(x => x.Eval).Count();
+            int alertCount = Alerts.Where(x => x.Eval).Count();
+
+            if (alertCount > 0)
+            {
+                Alerted = true;
+            }
+
+            return alertCount;
         }
     }
 
