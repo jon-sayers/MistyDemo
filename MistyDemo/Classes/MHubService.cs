@@ -41,12 +41,21 @@ namespace MistyDemo.Classes
 
             _client = DeviceClient.CreateFromConnectionString(_conString, TransportType.Mqtt);
 
-            _sendThread = new Thread(SendLoop);
-            _sendThread.Start();
+            Twin twin = await _client.GetTwinAsync();
+
+            string alertString = twin.Properties.Desired["alerts"].ToString();
+
+            Console.WriteLine(alertString);
+
+            _device.Alerts = JsonConvert.DeserializeObject<List<MAlert>>(alertString);
 
             await _client.SetDesiredPropertyUpdateCallbackAsync(TwinFunction, null);
 
             await _client.SetMethodHandlerAsync("Alert", AlertFunction, null);
+
+            _sendThread = new Thread(SendLoop);
+
+            _sendThread.Start();
         }
 
         private async void SendLoop()
