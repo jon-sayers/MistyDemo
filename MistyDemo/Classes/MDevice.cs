@@ -15,6 +15,16 @@ namespace MistyDemo.Classes
         {
             Alerts = new List<MAlert>();
         }
+
+        public int CheckReading(MReading reading)
+        {
+            foreach(MAlert alert in Alerts)
+            {
+                // reading.Payload.Where(x => x.Key == "").Select(x => x.Value);
+            }
+
+            return 0;
+        }
     }
 
 

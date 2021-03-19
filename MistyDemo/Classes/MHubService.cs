@@ -74,7 +74,7 @@ namespace MistyDemo.Classes
                         ContentEncoding = "utf-8",
                     };
 
-                    message.Properties.Add("Alert", (1 > 2) ? "true" : "false");
+                    message.Properties.Add("alerts", _device.CheckReading(toSend).ToString());
 
                     await _client.SendEventAsync(message);
 
