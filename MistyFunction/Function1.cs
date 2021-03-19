@@ -22,6 +22,9 @@ namespace MistyFunction
             log.LogInformation($"Id: {JsonConvert.SerializeObject(message.SystemProperties["iothub-connection-device-id"])}");
 
             log.LogInformation($"C# IoT Hub trigger function processed a message: {readingString}");
+
+            
+
         }
 
 
