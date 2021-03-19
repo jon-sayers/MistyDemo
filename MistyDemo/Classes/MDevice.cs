@@ -9,10 +9,26 @@ namespace MistyDemo.Classes
     {
         public int Interval { get; set; }
         public ISensor Sensor { get; set; }
+        public List<MAlert> Alerts { get; set; }
 
-    public MDevice()
+        public MDevice()
         {
-            
+            Alerts = new List<MAlert>();
+        }
+    }
+
+    public class MAlert
+    {
+        public int TypeId { get; set; }
+        public string Key { get; set; }
+        public string Rule { get; set; }
+        public string Alert { get; set; }
+        public int Action { get; set; }
+        public bool Eval { get; set; }
+
+        public MAlert()
+        {
+
         }
     }
 }
