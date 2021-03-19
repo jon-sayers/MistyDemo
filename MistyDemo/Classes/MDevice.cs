@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Unosquare.RaspberryIO;
+using Unosquare.RaspberryIO.Abstractions;
 
 namespace MistyDemo.Classes
 {
@@ -22,7 +24,7 @@ namespace MistyDemo.Classes
         public int CheckReading(MReading reading)
         {
             Regex rx = new Regex(@"\[.+?\]");
-            
+
             foreach (MAlert alert in Alerts)
             {
                 string toEval = alert.Rule;
@@ -71,6 +73,22 @@ namespace MistyDemo.Classes
 
             return alertCount;
         }
+
+        public void UpdatePins()
+        {
+            var alertPin = Pi.Gpio[17];
+
+            alertPin.PinMode = GpioPinDriveMode.Output;
+
+            alertPin.Write(Alerted);
+
+            var exposurePin = Pi.Gpio[18];
+
+            exposurePin.PinMode = GpioPinDriveMode.Output;
+
+            exposurePin.Write(Exposure);
+        }
+
     }
 
 

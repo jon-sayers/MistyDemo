@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Unosquare.RaspberryIO;
 
 namespace MistyDemo.Classes
 {
@@ -17,6 +18,12 @@ namespace MistyDemo.Classes
 
         public virtual MReading GetReading()
         {
+            // Work to do here, search i2c bus for device, go through manual for sensor and find out the command to send, and how many bytes to expect back...
+
+            //var myDevice = Pi.I2C.AddDevice(0x20);
+            //myDevice.Write(0x44);
+            //var response = myDevice.Read();
+
             MReading output = new MReading();
             return output;
         }

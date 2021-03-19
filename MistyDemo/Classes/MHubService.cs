@@ -21,10 +21,13 @@ namespace MistyDemo.Classes
         private MQueue _queue { get; set; }
         private static MDevice _device { get; set; }
 
-        public MHubService(MQueue queue, MDevice device)
+        private static IWebHostEnvironment _env;
+
+        public MHubService(IWebHostEnvironment env, MQueue queue, MDevice device)
         {
             _queue = queue;
             _device = device;
+            _env = env;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -70,6 +73,11 @@ namespace MistyDemo.Classes
 
                     int alertCount = _device.CheckReading(toSend);
 
+                    if (!_env.IsDevelopment())
+                    {
+                        _device.UpdatePins();
+                    }
+                        
                     toSend.Alerts = alertCount;
 
                     using var message = new Message(Encoding.ASCII.GetBytes(toSendString))
@@ -102,7 +110,13 @@ namespace MistyDemo.Classes
                 dynamic dataObject = JsonConvert.DeserializeObject(data);
 
                 _device.Exposure = dataObject.exposure;
-                
+
+
+                if (!_env.IsDevelopment())
+                {
+                    _device.UpdatePins();
+                }
+
                 // Acknowlege the direct method call with a 200 success message
                 string result = $"{{\"result\":\"Executed direct method: {methodRequest.Name}\"}}";
                 return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
