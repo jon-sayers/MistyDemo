@@ -20,7 +20,7 @@ namespace MistyFunction
 
 
         [FunctionName("Function1")]
-        public static void Run([IoTHubTrigger("messages/events", Connection = "Wez")]EventData message, ILogger log)
+        public static void Run([IoTHubTrigger("messages/events", Connection = "Wez")]EventData message, out object taskDocument, ILogger log)
         {
             string readingString = Encoding.UTF8.GetString(message.Body.Array);
 
@@ -28,18 +28,35 @@ namespace MistyFunction
 
             log.LogInformation($"C# IoT Hub trigger function processed a message: {readingString}");
 
-            //s_serviceClient = ServiceClient.CreateFromConnectionString("HostName=wezmondo.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=GqNdJYcXbTJ/kyp73kRUhIN/Zjx5BTS8yqsh3Trbka4=");
+            taskDocument = null;
         }
 
-        //public SendAlert()
-        //{
 
-        //    var method = new CloudToDeviceMethod("RemoteCommand", 30, 0);
-
-        //    method.SetPayloadJson("{}");
-
-        //    var response = await serviceClient.InvokeDeviceMethodAsync(deviceId, method);
-        //}
 
     }
+
+    //[FunctionName("Function1")]
+    //[return: Table("yourtablename", Connection = "StorageConnectionAppSetting")]
+    //public static TempHumidityIoTTableEntity Run([IoTHubTrigger("messages/events", Connection = "ConnectionStringSetting")] EventData message, TraceWriter log)
+    //{
+    //    var messageAsJson = Encoding.UTF8.GetString(message.GetBytes());
+    //    log.Info($"C# IoT Hub trigger function processed a message: {messageAsJson}");
+
+    //    var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(messageAsJson);
+
+    //    var deviceid = message.SystemProperties["iothub-connection-device-id"];
+
+    //    return new TempHumidityIoTTableEntity
+    //    {
+    //        PartitionKey = deviceid.ToString(),
+    //        RowKey = $"{deviceid}{message.EnqueuedTimeUtc.Ticks}",
+    //        DeviceId = deviceid.ToString(),
+    //        Humidity = data.ContainsKey("humidity") ? data["humidity"] : "",
+    //        Temperature = data.ContainsKey("temperature") ? data["temperature"] : "",
+    //        DateMeasured = message.EnqueuedTimeUtc.ToString("O")
+    //    };
+
+    //}
+
+
 }
