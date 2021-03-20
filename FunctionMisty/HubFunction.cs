@@ -54,7 +54,7 @@ namespace FunctionMisty
         {
             if (_readings.Readings.Count() % 10 == 0)
             {
-                ServiceClient _serviceClient = ServiceClient.CreateFromConnectionString("HostName=wezmondo.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=GqNdJYcXbTJ/kyp73kRUhIN/Zjx5BTS8yqsh3Trbka4=");
+                ServiceClient _serviceClient = ServiceClient.CreateFromConnectionString(System.Environment.GetEnvironmentVariable("wezhubhost"));
 
                 var method = new CloudToDeviceMethod("Alert", TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(0));
 
