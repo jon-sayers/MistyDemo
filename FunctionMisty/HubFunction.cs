@@ -22,7 +22,7 @@ namespace FunctionMisty
         {
             _readings = readings;
         }
-
+         
         private static HttpClient client = new HttpClient();
 
 
