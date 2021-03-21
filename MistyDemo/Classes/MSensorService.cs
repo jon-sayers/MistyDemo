@@ -64,7 +64,8 @@ namespace MistyDemo.Classes
             {
                 await Task.Delay(_device.Interval * 1000);              
                 MReading reading = _device.Sensor.GetReading();
-                Console.WriteLine(JsonConvert.SerializeObject(reading));
+                Console.WriteLine("Queued:" + JsonConvert.SerializeObject(reading));
+                Console.WriteLine();
                 _queue.Queue(reading);
             }
         }

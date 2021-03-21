@@ -108,6 +108,8 @@ namespace MistyDemo.Classes
 
                     Console.ResetColor();
 
+                    Console.WriteLine();
+
                 }
             }
         }
