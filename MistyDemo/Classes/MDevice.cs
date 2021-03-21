@@ -23,7 +23,12 @@ namespace MistyDemo.Classes
 
         public int CheckReading(MReading reading)
         {
+            // GET [PLACEHOLDERS] FROM RULE...
+
             Regex rx = new Regex(@"\[.+?\]");
+
+            // LOOP THROUGH DEVICE RULES, GET VALUES FROM READINGS AND EVALUATE THE RULE...
+            // NO EVAL FUNCTION IN C# SO WE USE A DATATABLE AND PARSE THE SQL STRING AS A BOOL...
 
             foreach (MAlert alert in Alerts)
             {
@@ -76,6 +81,9 @@ namespace MistyDemo.Classes
 
         public void UpdatePins()
         {
+
+            //GPIO FUNCTIONALITY ...
+
             var alertPin = Pi.Gpio[17];
 
             alertPin.PinMode = GpioPinDriveMode.Output;

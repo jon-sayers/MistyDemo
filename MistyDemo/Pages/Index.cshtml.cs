@@ -14,6 +14,8 @@ namespace MistyDemo.Pages
         private readonly ILogger<IndexModel> _logger;
         public MDevice Device {get; set;}
 
+        // INJECT DEVICE SINGLETON USED BY BACKGROUND SERVICES FOR USE IN PAGE RENDERING...
+
         public IndexModel(ILogger<IndexModel> logger, MDevice device)
         {
             _logger = logger;

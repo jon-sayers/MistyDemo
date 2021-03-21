@@ -25,21 +25,20 @@ namespace FunctionMisty
 
         private static HttpClient client = new HttpClient();
 
-        bool Exposure = true;
 
         [FunctionName("HubFunction")]
-        public void Run([IoTHubTrigger("messages/events", Connection = "wezhub")]EventData message, [CosmosDB(
+        public void Run([IoTHubTrigger("messages/events", Connection = "wezhub")] EventData message, [CosmosDB(
                 databaseName: "wezmondoIOT",
                 collectionName: "wezmondoIOT",
                 ConnectionStringSetting = "wezdata")]out dynamic document, ILogger log)
         {
-            string bodyString = Encoding.UTF8.GetString(message.Body.Array).Replace("Id","id");
+            string bodyString = Encoding.UTF8.GetString(message.Body.Array);
 
             log.LogInformation($"Id: {JsonConvert.SerializeObject(message.SystemProperties["iothub-connection-device-id"])}");
 
             log.LogInformation($"C# IoT Hub trigger function processed a message: {bodyString}");
 
-            document = bodyString;
+            // ADD READING TO SINGLETON SO WE CAN ANALYSE THE LAST 100 READINGS...
 
             MReading reading = JsonConvert.DeserializeObject<MReading>(bodyString);
 
@@ -48,10 +47,28 @@ namespace FunctionMisty
             log.LogInformation($"Readings: {_readings.Readings.Count()}");
 
             checkExposure(message.SystemProperties["iothub-connection-device-id"].ToString());
+
+            // CONVERT DATA INTO EXISTING PROJECT FORMAT SO I CAN QUERY IT ONLINE FOR TESTING...
+
+            MistyPayload payload = new MistyPayload();
+            payload.Alerts = reading.Alerts;
+            payload.Values = reading.Payload;
+            WSPayload toSend = new WSPayload();
+            toSend.ProjectID = 1;
+            toSend.RoleID = 6;
+            toSend.DeviceUID = message.SystemProperties["iothub-connection-device-id"].ToString();
+            toSend.Sent = reading.Time;
+            toSend.Data = payload;
+
+            // OUT VALUE...
+
+            document = JsonConvert.SerializeObject(toSend);
         }
 
         public async void checkExposure(string deviceId)
         {
+            // MOCK EXPOSURE CHECKER THAT SENDS AN ALERT TO THE HUB/DEVICE EVERY 10 READINGS...
+
             if (_readings.Readings.Count() % 10 == 0)
             {
                 ServiceClient _serviceClient = ServiceClient.CreateFromConnectionString(System.Environment.GetEnvironmentVariable("wezhubhost"));
@@ -66,8 +83,16 @@ namespace FunctionMisty
                 {
                     method.SetPayloadJson("{\"exposure\":false}");
                 }
-                    
-                var response = await _serviceClient.InvokeDeviceMethodAsync(deviceId, method);
+
+                try
+                {
+                    var response = await _serviceClient.InvokeDeviceMethodAsync(deviceId, method);
+                }
+                catch
+                {
+
+                }
+
 
                 _serviceClient.Dispose();
             }

@@ -30,6 +30,7 @@ namespace MistyDemo.Classes
             _env = env;
         }
 
+        // STARTING POINT FOR BACKGROUND SERVICES...
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (!stoppingToken.IsCancellationRequested)
@@ -63,14 +64,15 @@ namespace MistyDemo.Classes
 
         private async void SendLoop()
         {
+            // PULL READINGS OFF THE QUEUE AND SEND THEM TO THE HUB...
+
             while (true)
             {
                 MReading toSend = _queue.GetQueued();
 
                 if (toSend != null)
                 {
-                    string toSendString = JsonConvert.SerializeObject(toSend);
-
+                    
                     int alertCount = _device.CheckReading(toSend);
 
                     if (!_env.IsDevelopment())
@@ -79,6 +81,8 @@ namespace MistyDemo.Classes
                     }
                         
                     toSend.Alerts = alertCount;
+
+                    string toSendString = JsonConvert.SerializeObject(toSend);
 
                     using var message = new Message(Encoding.ASCII.GetBytes(toSendString))
                     {
@@ -98,6 +102,8 @@ namespace MistyDemo.Classes
 
         private static Task<MethodResponse> AlertFunction(MethodRequest methodRequest, object userContext)
         {
+            // LISTENER FOR ALERT FUNCTION...
+
             var data = Encoding.UTF8.GetString(methodRequest.Data);
 
             if (methodRequest.Data != null)
@@ -131,6 +137,8 @@ namespace MistyDemo.Classes
 
         private async Task TwinFunction(TwinCollection desiredProperties, object userContext)
         {
+            // LISTENER FOR TWIN UPDATES...
+
             string newIntervalString = desiredProperties["interval"];
             int newInterval = int.Parse(newIntervalString);
             _device.Interval = newInterval;

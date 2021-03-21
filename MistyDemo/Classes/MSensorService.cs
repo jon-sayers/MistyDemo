@@ -26,6 +26,8 @@ namespace MistyDemo.Classes
 
             _device.Interval = 5;
 
+            // USE MOCK CLASS FOR TESTING...
+
             if (env.IsDevelopment())
             {
                 _device.Sensor = new MSensorDev();
@@ -56,6 +58,8 @@ namespace MistyDemo.Classes
 
         private async void ReadLoop()
         {
+            // READ SENSOR AT DEFINED INTERVAL, AND QUEUE THE READING FOR SENDING TO THE HUB...
+
             while (true)
             {
                 await Task.Delay(_device.Interval * 1000);              

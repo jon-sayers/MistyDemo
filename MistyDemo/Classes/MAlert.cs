@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace MistyDemo.Classes
 {
+    // CLASS USED TO COLLECT ALERT DATA FROM TWIN, WITH ADDED 'EVAL' BOOL TO SHOW RESULTS OF THE RULE...
     public class MAlert
     {
         public int TypeId { get; set; }

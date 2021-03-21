@@ -8,6 +8,7 @@ namespace MistyDemo.Classes
 {
     public class MQueue
     {
+        // THREAD SAFE QUEUE SINGLETON USED THROUGHOUT APPLICATION...
 
         private readonly ConcurrentQueue<MReading> _readings = new ConcurrentQueue<MReading>();
 

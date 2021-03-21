@@ -37,6 +37,7 @@ namespace MistyDemo.Classes
 
     public class MSensorDev : MSensor
     {
+        // MOCK CLASS FOR TESTING...
 
         public override MReading GetReading()
         {
