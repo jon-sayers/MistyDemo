@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
@@ -15,7 +16,7 @@ namespace MistyDemo.Classes
     public class MHubService : BackgroundService
     {
         private static DeviceClient _client;
-        private static string _conString = "HostName=wezmondo.azure-devices.net;DeviceId=Misty01;SharedAccessKey=8/gRFZW5LkhahVM41Dbh9UH7c0o1B0ttOtz0yIvrqHU=";
+        private static string _conString;
 
         private Thread _sendThread { get; set; }
         private MQueue _queue { get; set; }
@@ -23,11 +24,13 @@ namespace MistyDemo.Classes
 
         private static IWebHostEnvironment _env;
 
-        public MHubService(IWebHostEnvironment env, MQueue queue, MDevice device)
+
+        public MHubService(IWebHostEnvironment env, IConfiguration config, MQueue queue, MDevice device)
         {
             _queue = queue;
             _device = device;
             _env = env;
+            _conString = config.GetConnectionString("Hub");
         }
 
         // STARTING POINT FOR BACKGROUND SERVICES...
@@ -94,7 +97,17 @@ namespace MistyDemo.Classes
 
                     await _client.SendEventAsync(message);
 
+                    if (alertCount > 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    else
+                        Console.ForegroundColor = ConsoleColor.Green;
+
                     Console.WriteLine("Sent: " + JsonConvert.SerializeObject(toSend));
+
+                    Console.ResetColor();
+
                 }
             }
         }
