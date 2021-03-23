@@ -45,7 +45,9 @@ namespace MistyDemo.Classes
             output.Id = "DEV-" + output.Id;
             output.TypeId = 1;
 
-            output.Payload.Add(new KeyValuePair<String, String>("p1", "300"));
+            var rand = new Random();
+
+            output.Payload.Add(new KeyValuePair<String, String>("p1", rand.Next(200, 500).ToString()));
             output.Payload.Add(new KeyValuePair<String, String>("p2", "250"));
             output.Payload.Add(new KeyValuePair<String, String>("p3", "400"));
             output.Payload.Add(new KeyValuePair<String, String>("p4", "400"));
